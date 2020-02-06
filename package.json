@@ -7,11 +7,18 @@
     "/lib"
   ],
   "scripts": {
+    "bundlesize": "bundlesize",
     "minify": "uglifyjs -o lib/index.js build/index.js",
     "build": "babel src -d build",
-    "prepublishOnly": "npm run build && npm run minify",
+    "prepublishOnly": "npm run build && npm run minify && npm run bundlesize",
     "test": "jest"
   },
+  "bundlesize": [
+    {
+      "path": "./lib/index.js",
+      "maxSize": "3 kB"
+    }
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/PatriotCodes/simply-fetch.git"
@@ -34,6 +41,7 @@
     "@babel/core": "^7.8.4",
     "@babel/plugin-proposal-class-properties": "^7.8.3",
     "@babel/preset-env": "^7.8.4",
+    "bundlesize": "^0.18.0",
     "uglify-js": "^3.7.7"
   }
 }
