@@ -11,7 +11,7 @@
     "minify": "uglifyjs --compress --mangle --toplevel -o lib/index.js build/index.js",
     "build": "babel src -d build",
     "prepublishOnly": "npm run build && npm run minify && npm run bundlesize",
-    "test": "jest"
+    "test": "jest --verbose"
   },
   "bundlesize": [
     {
@@ -42,6 +42,7 @@
     "@babel/plugin-proposal-class-properties": "^7.8.3",
     "@babel/preset-env": "^7.8.4",
     "bundlesize": "^0.18.0",
+    "jest": "^25.1.0",
     "uglify-js": "^3.7.7"
   }
 }

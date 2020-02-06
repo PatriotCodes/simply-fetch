@@ -1,4 +1,4 @@
-class Api {
+class Caller {
   static isUrlRegExp = new RegExp("^http");
 
   static config = {
@@ -55,6 +55,4 @@ class Api {
   }
 }
 
-module.exports = {
-  Api
-};
+module.exports = Caller;
