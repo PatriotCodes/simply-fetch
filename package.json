@@ -2,9 +2,12 @@
   "name": "simply-fetch",
   "version": "1.0.0",
   "description": "A very minimal wrapper over fetch api to make life easier :)",
-  "main": "src/index.js",
+  "main": "./lib/index.js",
+  "files": [
+    "/lib"
+  ],
   "scripts": {
-    "minify": "uglifyjs -o dist/index.min.js build/index.js",
+    "minify": "uglifyjs -o lib/index.js build/index.js",
     "build": "babel src -d build",
     "prepublishOnly": "npm run build && npm run minify",
     "test": "jest"
