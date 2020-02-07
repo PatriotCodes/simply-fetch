@@ -3,6 +3,7 @@ const caller = {
   config: {
     BASE_URL: '',
     TOKEN: () => {},
+    TIMEOUT: 5000,
   },
 };
 
@@ -39,9 +40,22 @@ caller.checkResponseOk = function(response) {
   if (!response.ok) throw new Error(response.statusText);
 };
 
+// TODO: should be tested
+caller.timeoutFetch = function(url, options) {
+  return Promise.race([
+    fetch(url, options),
+    new Promise((resolve, reject) =>
+      setTimeout(
+        () => reject(new Error(`Timeout of ${caller.config.TIMEOUT}ms exceeded`)),
+        caller.config.TIMEOUT,
+      ),
+    ),
+  ]);
+};
+
 caller.call = async function(route, options, method, body) {
   try {
-    const response = await fetch(
+    const response = await caller.timeoutFetch(
       caller.buildRoute(route, options),
       caller.buildOptions(method, body, options),
     );
@@ -55,6 +69,7 @@ caller.call = async function(route, options, method, body) {
   }
 };
 
+// TODO: simplify
 caller.get = async function(route, options) {
   return await caller.call(route, options, 'GET');
 };

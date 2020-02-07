@@ -20,9 +20,11 @@ it('should set config properly', () => {
   const newConfig = {
     BASE_URL: 'http://base-url/',
     TOKEN: () => 'token',
+    TIMEOUT: 20000,
   };
   caller.config.BASE_URL = newConfig.BASE_URL;
   caller.config.TOKEN = newConfig.TOKEN;
+  caller.config.TIMEOUT = newConfig.TIMEOUT;
   expect(caller.config).toEqual(newConfig);
 });
 
