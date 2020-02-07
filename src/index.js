@@ -1,9 +1,9 @@
 const caller = {
-  isUrlRegExp: new RegExp("^http"),
+  isUrlRegExp: new RegExp('^http'),
   config: {
-    BASE_URL: "",
-    TOKEN: () => {}
-  }
+    BASE_URL: '',
+    TOKEN: () => {},
+  },
 };
 
 caller.buildRoute = function(route) {
@@ -19,23 +19,19 @@ caller.buildOptions = function(method, body, { headers, ...options }) {
     method: method,
     headers: {
       ...(caller.config.TOKEN() && {
-        Authorization: `${caller.config.TOKEN()}`
+        Authorization: `${caller.config.TOKEN()}`,
       }),
-      "Content-Type":
-        headers && headers["Content-Type"]
-          ? headers["Content-Type"]
-          : "application/json",
-      ...headers
+      'Content-Type':
+        headers && headers['Content-Type'] ? headers['Content-Type'] : 'application/json',
+      ...headers,
     },
     ...(body && {
       body:
-        headers &&
-        headers["Content-Type"] &&
-        !headers["Content-Type"].includes("application/json")
+        headers && headers['Content-Type'] && !headers['Content-Type'].includes('application/json')
           ? body
-          : JSON.stringify(body)
+          : JSON.stringify(body),
     }),
-    ...options
+    ...options,
   };
 };
 
@@ -47,11 +43,11 @@ caller.call = async function(route, options, method, body) {
   try {
     const response = await fetch(
       caller.buildRoute(route, options),
-      caller.buildOptions(method, body, options)
+      caller.buildOptions(method, body, options),
     );
     caller.checkResponseOk(response);
-    const responseContentType = response.headers.get("Content-Type");
-    return responseContentType && responseContentType.includes("json")
+    const responseContentType = response.headers.get('Content-Type');
+    return responseContentType && responseContentType.includes('json')
       ? await response.json()
       : await response.text();
   } catch (error) {
@@ -60,11 +56,11 @@ caller.call = async function(route, options, method, body) {
 };
 
 caller.get = async function(route, options) {
-  return await caller.call(route, options, "GET");
+  return await caller.call(route, options, 'GET');
 };
 
 caller.post = async function(route, body, options) {
-  return await caller.call(route, options, "POST", body);
+  return await caller.call(route, options, 'POST', body);
 };
 
 module.exports = caller;
