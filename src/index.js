@@ -49,7 +49,7 @@ caller.call = async function(route, options, method, body) {
       caller.buildRoute(route, options),
       caller.buildOptions(method, body, options)
     );
-    this.checkResponseOk(response);
+    caller.checkResponseOk(response);
     const responseContentType = response.headers.get("Content-Type");
     return responseContentType && responseContentType.includes("json")
       ? await response.json()
@@ -60,11 +60,11 @@ caller.call = async function(route, options, method, body) {
 };
 
 caller.get = async function(route, options) {
-  return await this.call(route, options, "GET");
+  return await caller.call(route, options, "GET");
 };
 
 caller.post = async function(route, body, options) {
-  return await this.call(route, options, "POST", body);
+  return await caller.call(route, options, "POST", body);
 };
 
 module.exports = caller;
