@@ -7,7 +7,9 @@ const caller = {
 };
 
 caller.buildRoute = function(route) {
-  return !caller.isUrlRegExp.test(route)
+  return route[0] === '/'
+    ? `${window.location.protocol}//${window.location.host}${route}`
+    : !caller.isUrlRegExp.test(route)
     ? `${caller.config.BASE_URL}${route}`
     : route;
 };
@@ -19,6 +21,10 @@ caller.buildOptions = function(method, body, { headers, ...options }) {
       ...(caller.config.TOKEN() && {
         Authorization: `${caller.config.TOKEN()}`
       }),
+      "Content-Type":
+        headers && headers["Content-Type"]
+          ? headers["Content-Type"]
+          : "application/json",
       ...headers
     },
     ...(body && {
