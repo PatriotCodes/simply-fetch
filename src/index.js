@@ -1,18 +1,24 @@
-class Caller {
-  static isUrlRegExp = new RegExp("^http");
-
-  static config = {
+const caller = {
+  isUrlRegExp: new RegExp("^http"),
+  config: {
     BASE_URL: "",
     TOKEN: () => {}
-  };
+  }
+};
 
-  static buildRoute = route =>
-    !this.isUrlRegExp.test(route) ? `${this.config.BASE_URL}${route}` : route;
+caller.buildRoute = function(route) {
+  return !caller.isUrlRegExp.test(route)
+    ? `${caller.config.BASE_URL}${route}`
+    : route;
+};
 
-  static buildOptions = (method, body, { headers, ...options }) => ({
+caller.buildOptions = function(method, body, { headers, ...options }) {
+  return {
     method: method,
     headers: {
-      ...(this.config.TOKEN() && { Authorization: `${this.config.TOKEN()}` }),
+      ...(caller.config.TOKEN() && {
+        Authorization: `${caller.config.TOKEN()}`
+      }),
       ...headers
     },
     ...(body && {
@@ -24,35 +30,35 @@ class Caller {
           : JSON.stringify(body)
     }),
     ...options
-  });
+  };
+};
 
-  static checkResponseOk(response) {
-    if (!response.ok) throw new Error(response.statusText);
+caller.checkResponseOk = function(response) {
+  if (!response.ok) throw new Error(response.statusText);
+};
+
+caller.call = async function(route, options, method, body) {
+  try {
+    const response = await fetch(
+      caller.buildRoute(route, options),
+      caller.buildOptions(method, body, options)
+    );
+    this.checkResponseOk(response);
+    const responseContentType = response.headers.get("Content-Type");
+    return responseContentType && responseContentType.includes("json")
+      ? await response.json()
+      : await response.text();
+  } catch (error) {
+    throw error;
   }
+};
 
-  static async get(route, options) {
-    return await this.call(route, options, "GET");
-  }
+caller.get = async function(route, options) {
+  return await this.call(route, options, "GET");
+};
 
-  static async post(route, body, options) {
-    return await this.call(route, options, "POST", body);
-  }
+caller.post = async function(route, body, options) {
+  return await this.call(route, options, "POST", body);
+};
 
-  static async call(route, options, method, body) {
-    try {
-      const response = await fetch(
-        this.buildRoute(route, options),
-        this.buildOptions(method, body, options)
-      );
-      this.checkResponseOk(response);
-      const responseContentType = response.headers.get("Content-Type");
-      return responseContentType && responseContentType.includes("json")
-        ? await response.json()
-        : await response.text();
-    } catch (error) {
-      throw error;
-    }
-  }
-}
-
-module.exports = Caller;
+module.exports = caller;

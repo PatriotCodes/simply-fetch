@@ -9,7 +9,7 @@
   "scripts": {
     "bundlesize": "bundlesize",
     "minify": "uglifyjs --compress --mangle --toplevel -o lib/index.js build/index.js",
-    "build": "babel src -d build",
+    "build": "babel src/index.js -d build",
     "prepublishOnly": "npm run test && npm run build && npm run minify && npm run bundlesize",
     "test": "jest --verbose --coverage"
   },
