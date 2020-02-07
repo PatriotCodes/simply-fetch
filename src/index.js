@@ -63,4 +63,16 @@ caller.post = async function(route, body, options) {
   return await caller.call(route, options, 'POST', body);
 };
 
+caller.put = async function(route, body, options) {
+  return await caller.call(route, options, 'PUT', body);
+};
+
+caller.delete = async function(route, options) {
+  return await caller.call(route, options, 'DELETE');
+};
+
+caller.patch = async function(route, body, options) {
+  return await caller.call(route, options, 'PATCH', body);
+};
+
 module.exports = caller;
