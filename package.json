@@ -4,7 +4,7 @@
   "description": "A very minimal wrapper over fetch api to make life easier :)",
   "main": "./lib/index.js",
   "files": [
-    "/lib"
+    "/lib/index.js"
   ],
   "scripts": {
     "bundlesize": "bundlesize",
