@@ -38,7 +38,6 @@ caller.call = async function(route, options, method, body) {
     };
   };
 
-  // TODO: should be tested
   const timeoutFetch = function(url, options) {
     return Promise.race([
       fetch(url, options),
@@ -50,9 +49,8 @@ caller.call = async function(route, options, method, body) {
       ),
     ]);
   };
-
   const checkResponseOk = function(response) {
-    if (!response.ok) throw new Error(response.statusText);
+    if (!response.ok) throw response;
   };
 
   try {
@@ -61,10 +59,8 @@ caller.call = async function(route, options, method, body) {
       buildOptions(method, body, options),
     );
     checkResponseOk(response);
-    const responseContentType = response.headers.get('Content-Type');
-    return responseContentType && responseContentType.includes('json')
-      ? await response.json()
-      : await response.text();
+    // call().json() || call().text()
+    return response;
   } catch (error) {
     throw error;
   }

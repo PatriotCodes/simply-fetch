@@ -17,7 +17,6 @@ it('should set config properly', () => {
   caller.config.BASE_URL = newConfig.BASE_URL;
   caller.config.TOKEN = newConfig.TOKEN;
   caller.config.TIMEOUT = newConfig.TIMEOUT;
-  caller.
   expect(caller.config).toEqual(newConfig);
 });
 

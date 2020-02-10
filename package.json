@@ -16,7 +16,7 @@
   "bundlesize": [
     {
       "path": "./lib/index.js",
-      "maxSize": "3 kB"
+      "maxSize": "2 kB"
     }
   ],
   "repository": {
