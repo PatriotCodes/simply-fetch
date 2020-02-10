@@ -8,14 +8,6 @@ Object.defineProperty(window, 'location', {
   },
 });
 
-test.each([
-  ['https//www', true],
-  ['http://www', true],
-  ['/www', false],
-])('isUrlRegExp should resolve correctly', (route, expected) => {
-  expect(caller.isUrlRegExp.test(route)).toEqual(expected);
-});
-
 it('should set config properly', () => {
   const newConfig = {
     BASE_URL: 'http://base-url/',
@@ -25,20 +17,21 @@ it('should set config properly', () => {
   caller.config.BASE_URL = newConfig.BASE_URL;
   caller.config.TOKEN = newConfig.TOKEN;
   caller.config.TIMEOUT = newConfig.TIMEOUT;
+  caller.
   expect(caller.config).toEqual(newConfig);
 });
 
-it('build route should return baseUrl appended route for non-http route', () => {
-  expect(caller.buildRoute('route')).toEqual('http://base-url/route');
-});
-
-test.each([['https://www'], ['http://']])(
-  'build route should return route is it is http/https appended',
-  route => {
-    expect(caller.buildRoute(route)).toEqual(route);
-  },
-);
-
-it('build route should fallback to location.origin base url when passed with a /', () => {
-  expect(caller.buildRoute('/get')).toEqual('http://test.com/get');
-});
+// it('build route should return baseUrl appended route for non-http route', () => {
+//   expect(caller.buildRoute('route')).toEqual('http://base-url/route');
+// });
+//
+// test.each([['https://www'], ['http://']])(
+//   'build route should return route is it is http/https appended',
+//   route => {
+//     expect(caller.buildRoute(route)).toEqual(route);
+//   },
+// );
+//
+// it('build route should fallback to location.origin base url when passed with a /', () => {
+//   expect(caller.buildRoute('/get')).toEqual('http://test.com/get');
+// });

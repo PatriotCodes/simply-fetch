@@ -1,5 +1,4 @@
 const caller = {
-  isUrlRegExp: new RegExp('^http'),
   config: {
     BASE_URL: '',
     TOKEN: () => {},
@@ -7,59 +6,61 @@ const caller = {
   },
 };
 
-caller.buildRoute = function(route) {
-  return route[0] === '/'
-    ? `${window.location.protocol}//${window.location.host}${route}`
-    : !caller.isUrlRegExp.test(route)
-    ? `${caller.config.BASE_URL}${route}`
-    : route;
-};
-
-caller.buildOptions = function(method, body, { headers, ...options }) {
-  return {
-    method: method,
-    headers: {
-      ...(caller.config.TOKEN() && {
-        Authorization: `${caller.config.TOKEN()}`,
-      }),
-      'Content-Type':
-        headers && headers['Content-Type'] ? headers['Content-Type'] : 'application/json',
-      ...headers,
-    },
-    ...(body && {
-      body:
-        headers && headers['Content-Type'] && !headers['Content-Type'].includes('application/json')
-          ? body
-          : JSON.stringify(body),
-    }),
-    ...options,
-  };
-};
-
-caller.checkResponseOk = function(response) {
-  if (!response.ok) throw new Error(response.statusText);
-};
-
-// TODO: should be tested
-caller.timeoutFetch = function(url, options) {
-  return Promise.race([
-    fetch(url, options),
-    new Promise((resolve, reject) =>
-      setTimeout(
-        () => reject(new Error(`Timeout of ${caller.config.TIMEOUT}ms exceeded`)),
-        caller.config.TIMEOUT,
-      ),
-    ),
-  ]);
-};
-
 caller.call = async function(route, options, method, body) {
+
+  const buildRoute = function(route) {
+    const isUrlRegExp = new RegExp('^http');
+    return route[0] === '/'
+      ? `${window.location.protocol}//${window.location.host}${route}`
+      : !isUrlRegExp.test(route)
+        ? `${caller.config.BASE_URL}${route}`
+        : route;
+  };
+
+  const buildOptions = function(method, body, { headers, ...options }) {
+    return {
+      method: method,
+      headers: {
+        ...(caller.config.TOKEN() && {
+          Authorization: `${caller.config.TOKEN()}`,
+        }),
+        'Content-Type':
+          headers && headers['Content-Type'] ? headers['Content-Type'] : 'application/json',
+        ...headers,
+      },
+      ...(body && {
+        body:
+          headers && headers['Content-Type'] && !headers['Content-Type'].includes('application/json')
+            ? body
+            : JSON.stringify(body),
+      }),
+      ...options,
+    };
+  };
+
+  // TODO: should be tested
+  const timeoutFetch = function(url, options) {
+    return Promise.race([
+      fetch(url, options),
+      new Promise((resolve, reject) =>
+        setTimeout(
+          () => reject(new Error(`Timeout of ${caller.config.TIMEOUT}ms exceeded`)),
+          caller.config.TIMEOUT,
+        ),
+      ),
+    ]);
+  };
+
+  const checkResponseOk = function(response) {
+    if (!response.ok) throw new Error(response.statusText);
+  };
+
   try {
-    const response = await caller.timeoutFetch(
-      caller.buildRoute(route, options),
-      caller.buildOptions(method, body, options),
+    const response = await timeoutFetch(
+      buildRoute(route, options),
+      buildOptions(method, body, options),
     );
-    caller.checkResponseOk(response);
+    checkResponseOk(response);
     const responseContentType = response.headers.get('Content-Type');
     return responseContentType && responseContentType.includes('json')
       ? await response.json()
@@ -69,7 +70,6 @@ caller.call = async function(route, options, method, body) {
   }
 };
 
-// TODO: simplify
 caller.get = async function(route, options) {
   return await caller.call(route, options, 'GET');
 };
