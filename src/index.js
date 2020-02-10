@@ -49,6 +49,7 @@ caller.call = async function(route, options, method, body) {
       ),
     ]);
   };
+
   const checkResponseOk = function(response) {
     if (!response.ok) throw response;
   };
@@ -59,31 +60,33 @@ caller.call = async function(route, options, method, body) {
       buildOptions(method, body, options),
     );
     checkResponseOk(response);
-    // call().json() || call().text()
-    return response;
+    const responseContentType = response.headers.get('Content-Type');
+    return responseContentType && responseContentType.includes('json')
+      ? await response.json()
+      : await response.text();
   } catch (error) {
     throw error;
   }
 };
 
-caller.get = async function(route, options) {
+caller.get = async function(route, options = {}) {
   return await caller.call(route, options, 'GET');
 };
 
-caller.post = async function(route, body, options) {
+caller.post = async function(route, body = {}, options = {}) {
   return await caller.call(route, options, 'POST', body);
 };
 
-caller.put = async function(route, body, options) {
+caller.put = async function(route, body = {}, options= {}) {
   return await caller.call(route, options, 'PUT', body);
 };
 
-caller.delete = async function(route, options) {
+caller.delete = async function(route, options = {}) {
   return await caller.call(route, options, 'DELETE');
 };
 
-caller.patch = async function(route, body, options) {
+caller.patch = async function(route, body = {}, options = {}) {
   return await caller.call(route, options, 'PATCH', body);
 };
 
-module.exports = caller;
+export default caller;
