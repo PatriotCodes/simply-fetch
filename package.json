@@ -13,6 +13,11 @@
     "prepublishOnly": "npm run test && npm run build && npm run minify && npm run bundlesize",
     "test": "jest --verbose --coverage"
   },
+  "jest": {
+    "setupFiles": [
+      "./src/setupTests.js"
+    ]
+  },
   "bundlesize": [
     {
       "path": "./lib/index.js",
@@ -40,9 +45,11 @@
     "@babel/cli": "^7.8.4",
     "@babel/core": "^7.8.4",
     "@babel/plugin-transform-async-to-generator": "^7.8.3",
+    "@babel/preset-env": "^7.8.4",
     "@babel/preset-react": "^7.8.3",
     "bundlesize": "^0.18.0",
     "jest": "^25.1.0",
+    "jest-fetch-mock": "^3.0.1",
     "terser": "^4.6.3"
   }
 }
