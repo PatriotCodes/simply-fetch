@@ -17,18 +17,22 @@ describe('lib tests', () => {
     expect(caller.config).toEqual(newConfig);
   });
 
-  it('build route should return baseUrl appended route for non-http route', () => {
-    // expect(caller.buildRoute('route')).toEqual('http://base-url/route');
+  it('build route should return baseUrl appended route for non-http route', async () => {
+    await caller.get('route');
+    console.log(fetch.mock.calls[0][0]);
+    expect(fetch.mock.calls[0][0]).toEqual('http://base-url/route');
   });
 
-// test.each([['https://www'], ['http://']])(
-//   'build route should return route is it is http/https appended',
-//   route => {
-//     expect(caller.buildRoute(route)).toEqual(route);
-//   },
-// );
-//
-// it('build route should fallback to location.origin base url when passed with a /', () => {
-//   expect(caller.buildRoute('/get')).toEqual('http://test.com/get');
-// });
+  test.each([['https://www'], ['http://']])(
+    'build route should return route is it is http/https appended',
+    async (route) => {
+      await caller.get(route);
+      expect(fetch.mock.calls[0][0]).toEqual(route);
+    },
+  );
+
+  it('build route should fallback to location.origin base url when passed with a /', async () => {
+    await caller.get('/route');
+    expect(fetch.mock.calls[0][0]).toEqual('http://test.com/route');
+  });
 });
