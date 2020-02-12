@@ -1,4 +1,4 @@
-const caller = {
+const fetchz = {
   config: {
     BASE_URL: '',
     TOKEN: () => {},
@@ -6,14 +6,14 @@ const caller = {
   },
 };
 
-caller.call = async function(route, options, method, body) {
+fetchz.call = async function(route, options, method, body) {
 
   const buildRoute = function(route) {
     const isUrlRegExp = new RegExp('^http');
     return route[0] === '/'
       ? `${window.location.protocol}//${window.location.host}${route}`
       : !isUrlRegExp.test(route)
-        ? `${caller.config.BASE_URL}${route}`
+        ? `${fetchz.config.BASE_URL}${route}`
         : route;
   };
 
@@ -21,8 +21,8 @@ caller.call = async function(route, options, method, body) {
     return {
       method: method,
       headers: {
-        ...(caller.config.TOKEN() && {
-          Authorization: `${caller.config.TOKEN()}`,
+        ...(fetchz.config.TOKEN() && {
+          Authorization: `${fetchz.config.TOKEN()}`,
         }),
         'Content-Type':
           headers && headers['Content-Type'] ? headers['Content-Type'] : 'application/json',
@@ -43,8 +43,8 @@ caller.call = async function(route, options, method, body) {
       fetch(url, options),
       new Promise((resolve, reject) =>
         setTimeout(
-          () => reject(new Error(`Timeout of ${caller.config.TIMEOUT}ms exceeded`)),
-          caller.config.TIMEOUT,
+          () => reject(new Error(`Timeout of ${fetchz.config.TIMEOUT}ms exceeded`)),
+          fetchz.config.TIMEOUT,
         ),
       ),
     ]);
@@ -69,24 +69,24 @@ caller.call = async function(route, options, method, body) {
   }
 };
 
-caller.get = async function(route, options = {}) {
-  return await caller.call(route, options, 'GET');
+fetchz.get = async function(route, options = {}) {
+  return await fetchz.call(route, options, 'GET');
 };
 
-caller.post = async function(route, body = {}, options = {}) {
-  return await caller.call(route, options, 'POST', body);
+fetchz.post = async function(route, body = {}, options = {}) {
+  return await fetchz.call(route, options, 'POST', body);
 };
 
-caller.put = async function(route, body = {}, options= {}) {
-  return await caller.call(route, options, 'PUT', body);
+fetchz.put = async function(route, body = {}, options= {}) {
+  return await fetchz.call(route, options, 'PUT', body);
 };
 
-caller.delete = async function(route, options = {}) {
-  return await caller.call(route, options, 'DELETE');
+fetchz.delete = async function(route, options = {}) {
+  return await fetchz.call(route, options, 'DELETE');
 };
 
-caller.patch = async function(route, body = {}, options = {}) {
-  return await caller.call(route, options, 'PATCH', body);
+fetchz.patch = async function(route, body = {}, options = {}) {
+  return await fetchz.call(route, options, 'PATCH', body);
 };
 
-export default caller;
+export default fetchz;
