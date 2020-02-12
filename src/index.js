@@ -1,7 +1,7 @@
 const fetchz = {
   config: {
     BASE_URL: '',
-    TOKEN: () => {},
+    TOKEN: () => undefined,
     TIMEOUT: 5000,
   },
 };

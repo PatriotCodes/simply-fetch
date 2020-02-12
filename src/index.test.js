@@ -5,6 +5,10 @@ describe('lib tests', () => {
     fetch.resetMocks();
   });
 
+  it('default config TOKEN should return undefined', () => {
+    expect(fetchz.config.TOKEN()).toEqual(undefined);
+  });
+
   it('should set config properly', () => {
     const newConfig = {
       BASE_URL: 'http://base-url/',
