@@ -19,7 +19,6 @@ describe('lib tests', () => {
 
   it('build route should return baseUrl appended route for non-http route', async () => {
     await caller.get('route');
-    console.log(fetch.mock.calls[0][0]);
     expect(fetch.mock.calls[0][0]).toEqual('http://base-url/route');
   });
 
@@ -35,4 +34,15 @@ describe('lib tests', () => {
     await caller.get('/route');
     expect(fetch.mock.calls[0][0]).toEqual('http://test.com/route');
   });
+
+  it('should throw error if not completed within timeout', async () => {
+    caller.config.TIMEOUT = 50;
+    fetch.mockResponseOnce(
+      () =>
+        new Promise(resolve => setTimeout(() => resolve({ body: 'ok' }), 100))
+    );
+    await expect(caller.get('route')).rejects.toThrow();
+  });
+
+
 });
