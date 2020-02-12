@@ -14,10 +14,12 @@ describe('lib tests', () => {
       BASE_URL: 'http://base-url/',
       TOKEN: () => 'token',
       TIMEOUT: 20000,
+      AUTH_TYPE: 'Basic',
     };
     fetchz.config.BASE_URL = newConfig.BASE_URL;
     fetchz.config.TOKEN = newConfig.TOKEN;
     fetchz.config.TIMEOUT = newConfig.TIMEOUT;
+    fetchz.config.AUTH_TYPE = newConfig.AUTH_TYPE;
     expect(fetchz.config).toEqual(newConfig);
   });
 
@@ -28,7 +30,7 @@ describe('lib tests', () => {
 
   test.each([['https://www'], ['http://']])(
     'build route should return route is it is http/https appended',
-    async (route) => {
+    async route => {
       await fetchz.get(route);
       expect(fetch.mock.calls[0][0]).toEqual(route);
     },
@@ -42,8 +44,7 @@ describe('lib tests', () => {
   it('should throw error if not completed within timeout', async () => {
     fetchz.config.TIMEOUT = 50;
     fetch.mockResponseOnce(
-      () =>
-        new Promise(resolve => setTimeout(() => resolve({ body: 'ok' }), 100))
+      () => new Promise(resolve => setTimeout(() => resolve({ body: 'ok' }), 100)),
     );
     await expect(fetchz.get('route')).rejects.toThrow();
   });
@@ -102,7 +103,7 @@ describe('lib tests', () => {
 
   it('should make patch request with proper request method', async () => {
     await fetchz.patch('/route');
-    expect(fetch.mock.calls[0][1].method).toEqual('PATCH')
+    expect(fetch.mock.calls[0][1].method).toEqual('PATCH');
   });
 
   it('should call fetchz call method when patch called', async () => {

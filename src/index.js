@@ -1,20 +1,20 @@
 const fetchz = {
   config: {
-    BASE_URL: '',
+    BASE_URL: '/',
     TOKEN: () => undefined,
     TIMEOUT: 5000,
+    AUTH_TYPE: '',
   },
 };
 
 fetchz.call = async function(route, options, method, body) {
-
   const buildRoute = function(route) {
     const isUrlRegExp = new RegExp('^http');
     return route[0] === '/'
       ? `${window.location.protocol}//${window.location.host}${route}`
       : !isUrlRegExp.test(route)
-        ? `${fetchz.config.BASE_URL}${route}`
-        : route;
+      ? `${fetchz.config.BASE_URL}${route}`
+      : route;
   };
 
   const buildOptions = function(method, body, { headers, ...options }) {
@@ -30,7 +30,9 @@ fetchz.call = async function(route, options, method, body) {
       },
       ...(body && {
         body:
-          headers && headers['Content-Type'] && !headers['Content-Type'].includes('application/json')
+          headers &&
+          headers['Content-Type'] &&
+          !headers['Content-Type'].includes('application/json')
             ? body
             : JSON.stringify(body),
       }),
@@ -60,10 +62,7 @@ fetchz.call = async function(route, options, method, body) {
       buildOptions(method, body, options),
     );
     checkResponseOk(response);
-    const responseContentType = response.headers.get('Content-Type');
-    return responseContentType && responseContentType.includes('json')
-      ? await response.json()
-      : await response.text();
+    return response;
   } catch (error) {
     throw error;
   }
@@ -77,7 +76,7 @@ fetchz.post = async function(route, body = {}, options = {}) {
   return await fetchz.call(route, options, 'POST', body);
 };
 
-fetchz.put = async function(route, body = {}, options= {}) {
+fetchz.put = async function(route, body = {}, options = {}) {
   return await fetchz.call(route, options, 'PUT', body);
 };
 
