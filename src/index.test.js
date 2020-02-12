@@ -44,5 +44,28 @@ describe('lib tests', () => {
     await expect(caller.get('route')).rejects.toThrow();
   });
 
+  it('should make get request with proper header', async () => {
+    await caller.get('/route');
+    expect(fetch.mock.calls[0][1].method).toEqual('GET');
+  });
 
+  it('should make post request with proper request method', async () => {
+    await caller.post('/route');
+    expect(fetch.mock.calls[0][1].method).toEqual('POST');
+  });
+
+  it('should make put request with proper request method', async () => {
+    await caller.put('/route');
+    expect(fetch.mock.calls[0][1].method).toEqual('PUT');
+  });
+
+  it('should make delete request with proper request method', async () => {
+    await caller.delete('/route');
+    expect(fetch.mock.calls[0][1].method).toEqual('DELETE');
+  });
+
+  it('should make patch request with proper request method', async () => {
+    await caller.patch('/route');
+    expect(fetch.mock.calls[0][1].method).toEqual('PATCH')
+  });
 });
