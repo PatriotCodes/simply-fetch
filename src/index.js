@@ -22,7 +22,9 @@ fetchz.call = async function(route, options, method, body) {
       method: method,
       headers: {
         ...(fetchz.config.TOKEN() && {
-          Authorization: `${fetchz.config.TOKEN()}`,
+          Authorization: `${
+            fetchz.config.AUTH_TYPE ? `${fetchz.config.AUTH_TYPE} ` : ''
+          }${fetchz.config.TOKEN()}`,
         }),
         'Content-Type':
           headers && headers['Content-Type'] ? headers['Content-Type'] : 'application/json',

@@ -23,6 +23,11 @@ describe('lib tests', () => {
     expect(fetchz.config).toEqual(newConfig);
   });
 
+  it('should append auth token if specified', async () => {
+    await fetchz.get('route');
+    expect(fetch.mock.calls[0][1].headers.Authorization).toEqual('Basic token');
+  });
+
   it('build route should return baseUrl appended route for non-http route', async () => {
     await fetchz.get('route');
     expect(fetch.mock.calls[0][0]).toEqual('http://base-url/route');
