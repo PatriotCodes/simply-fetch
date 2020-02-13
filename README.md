@@ -45,12 +45,13 @@ fetchz.config.AUTH_TYPE = 'Basic';
 ```js
 // JSON.stringify will be automatically used on body if no Content-Type header is specified
 try {
-  const request = await fetchz.post('post-route', {
+  const request = fetchz.post('post-route', {
     foo: 'bar'
   }, {
     cache: 'no-cache'
-  });
-  const data = await request.json();
+  }).then(response => {
+    const data = response.json();
+  })
   // catch block will also return any non 200 response errors as well as timeout errors
 } catch (error) {
   console.error(error);

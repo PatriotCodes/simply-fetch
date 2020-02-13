@@ -50,10 +50,10 @@ class ExtendedFetch {
       }, this.config.TIMEOUT);
       this.nativeFetch.then(response => {
         clearTimeout(this.timeout);
-        if (!response.ok) {
-          reject(response);
-        } else {
-          if (!this.exceedsTimeout) {
+        if (!this.exceedsTimeout) {
+          if (!response.ok) {
+            reject(response);
+          } else {
             resolve(callback(response));
           }
         }
