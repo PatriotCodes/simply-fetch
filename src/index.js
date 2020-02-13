@@ -1,19 +1,8 @@
 class ExtendedFetch {
-  // TODO: find a way to implement
-
-  //  const timeoutFetch = function(url, options) {
-  //     return Promise.race([
-  //       fetch(url, options),
-  //       new Promise((resolve, reject) =>
-  //         setTimeout(
-  //           () => reject(new Error(`Timeout of ${fetchz.config.TIMEOUT}ms exceeded`)),
-  //           fetchz.config.TIMEOUT,
-  //         ),
-  //       ),
-  //     ]);
-  //   };
-
   constructor(route, options, method, config, body) {
+    this.config = config;
+    this.timeout = undefined;
+    this.exceedsTimeout = false;
     const buildRoute = function(route) {
       return route[0] === '/'
         ? `${window.location.protocol}//${window.location.host}${route}`
@@ -22,14 +11,13 @@ class ExtendedFetch {
           : route;
     };
 
+    // TODO: Protect user from passing signal:
     const buildOptions = function(method, body, { headers, ...options }) {
       return {
         method: method,
         headers: {
           ...(config.TOKEN() && {
-            Authorization: `${
-              config.AUTH_TYPE ? `${config.AUTH_TYPE} ` : ''
-              }${config.TOKEN()}`,
+            Authorization: `${config.AUTH_TYPE ? `${config.AUTH_TYPE} ` : ''}${config.TOKEN()}`,
           }),
           'Content-Type':
             headers && headers['Content-Type'] ? headers['Content-Type'] : 'application/json',
@@ -55,9 +43,21 @@ class ExtendedFetch {
   }
 
   then(callback) {
-    this.nativeFetch = this.nativeFetch.then(response => {
-      if (!response.ok) throw response;
-      callback(response);
+    this.nativeFetch = new Promise((resolve, reject) => {
+      this.timeout = setTimeout(() => {
+        this.exceedsTimeout = true;
+        reject(new Error(`Timeout of ${this.config.TIMEOUT}ms exceeded`));
+      }, this.config.TIMEOUT);
+      this.nativeFetch.then(response => {
+        clearTimeout(this.timeout);
+        if (!response.ok) {
+          reject(response);
+        } else {
+          if (!this.exceedsTimeout) {
+            resolve(callback(response));
+          }
+        }
+      });
     });
     return this;
   }
@@ -76,7 +76,9 @@ class ExtendedFetch {
     return this;
   }
 
+  // TODO: work on error catch
   abort() {
+    clearTimeout(this.timeout);
     this.controller.abort();
   }
 }
