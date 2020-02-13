@@ -2,14 +2,16 @@
 
 ![](./coverage/badge-statements.svg) ![](./coverage/badge-functions.svg) ![](./coverage/badge-lines.svg)
 
-A very basic and lightweight wrapper over fetch api to make fetch calls easier without boilerplate code!
+A lightweight wrapper over fetch api to make fetch calls easier without boilerplate code! 
+Abortable fetch with timeout, internal response.ok handling, configuration and utility functions for http methods.
 
 ## Features
 
 1. Check for response.ok errors
-2. Timeout setting for requests
-3. Settings config for BaseUrl and Authentication token
-4. Util functions for HTTP request methods
+2. Each request has an abort method
+3. Timeout setting for requests
+4. Settings config for BaseUrl and Authentication token
+5. Util functions for HTTP request methods
 
 ## Installing
 
@@ -39,7 +41,7 @@ fetchz.config.TOKEN = () => localStorage.getItem('jwt');
 fetchz.config.AUTH_TYPE = 'Basic';
 ```
 
-#### Make POST request:
+#### Example POST request:
 ```js
 // JSON.stringify will be automatically used on body if no Content-Type header is specified
 try {
@@ -48,11 +50,14 @@ try {
   }, {
     cache: 'no-cache'
   });
-  const data = request.json();
+  const data = await request.json();
   // catch block will also return any non 200 response errors as well as timeout errors
 } catch (error) {
   console.error(error);
 }
+
+// Aborting request
+request.abort();
 ```
 
 #### Passing route:
@@ -64,11 +69,11 @@ fetchz.get('route');
 fetchz.get('/route');
 
 // request to route
-fetch.get('https://api/route');
+fetchz.get('https://api/route');
 ```
 
 ## Work in Progress:
 
 1. Instance creation
-2. Cancel method
+2. ~~Cancel method~~
 3. Response/request interceptors
