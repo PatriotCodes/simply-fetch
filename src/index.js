@@ -1,4 +1,4 @@
-function ExtendedFetch(route, options, method, config, body) {
+function ExtendedFetch(route, options, method, config) {
     this.config = config;
     this.timeout = undefined;
     this.exceedsTimeout = false;
@@ -10,7 +10,7 @@ function ExtendedFetch(route, options, method, config, body) {
           : route;
     };
 
-    const buildOptions = function(method, body, { headers, ...options }) {
+    const buildOptions = function(method, { headers, ...options }) {
       return {
         method: method,
         headers: {
@@ -21,13 +21,13 @@ function ExtendedFetch(route, options, method, config, body) {
             headers && headers['Content-Type'] ? headers['Content-Type'] : 'application/json',
           ...headers,
         },
-        ...(body && {
+        ...(options.body && {
           body:
             headers &&
             headers['Content-Type'] &&
             !headers['Content-Type'].includes('application/json')
-              ? body
-              : JSON.stringify(body),
+              ? options.body
+              : JSON.stringify(options.body),
         }),
         ...options,
       };
@@ -36,7 +36,7 @@ function ExtendedFetch(route, options, method, config, body) {
     this.controller = new AbortController();
     this.nativeFetch = window.fetch(
       buildRoute(route),
-      buildOptions(method, body, { ...options, signal: this.controller.signal }),
+      buildOptions(method, { ...options, signal: this.controller.signal }),
     );
 
   this.then = function(callback) {
@@ -96,20 +96,20 @@ fetchz.get = function(route, options = {}) {
   return new ExtendedFetch(route, options, 'GET', fetchz.config);
 };
 
-fetchz.post = function(route, body = {}, options = {}) {
-  return new ExtendedFetch(route, options, 'POST', fetchz.config, body);
+fetchz.post = function(route, options = {}) {
+  return new ExtendedFetch(route, options, 'POST', fetchz.config);
 };
 
-fetchz.put = function(route, body = {}, options = {}) {
-  return new ExtendedFetch(route, options, 'PUT', fetchz.config, body);
+fetchz.put = function(route, options = {}) {
+  return new ExtendedFetch(route, options, 'PUT', fetchz.config);
 };
 
 fetchz.delete = function(route, options = {}) {
   return new ExtendedFetch(route, options, 'DELETE', fetchz.config);
 };
 
-fetchz.patch = function(route, body = {}, options = {}) {
-  return new ExtendedFetch(route, options, 'PATCH', fetchz.config, body);
+fetchz.patch = function(route, options = {}) {
+  return new ExtendedFetch(route, options, 'PATCH', fetchz.config);
 };
 
 export default fetchz;

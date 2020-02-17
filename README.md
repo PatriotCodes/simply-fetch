@@ -46,9 +46,10 @@ fetchz.config.AUTH_TYPE = 'Basic';
 // JSON.stringify will be automatically used on body if no Content-Type header is specified
 try {
   const request = fetchz.post('post-route', {
-    foo: 'bar'
-  }, {
-    cache: 'no-cache'
+    cache: 'no-cache',
+    body: {
+      foo: 'bar'
+    }
   }).then(response => {
     response.json().then(json => {
       const data = json;
