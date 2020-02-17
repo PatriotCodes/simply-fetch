@@ -11,7 +11,6 @@ class ExtendedFetch {
           : route;
     };
 
-    // TODO: Protect user from passing signal:
     const buildOptions = function(method, body, { headers, ...options }) {
       return {
         method: method,
@@ -57,6 +56,10 @@ class ExtendedFetch {
             resolve(callback(response));
           }
         }
+      }).catch(error => {
+        if (error.name !== 'AbortError') {
+          reject(error);
+        }
       });
     });
     return this;
@@ -76,7 +79,6 @@ class ExtendedFetch {
     return this;
   }
 
-  // TODO: work on error catch
   abort() {
     clearTimeout(this.timeout);
     this.controller.abort();
