@@ -1,5 +1,4 @@
-class ExtendedFetch {
-  constructor(route, options, method, config, body) {
+function ExtendedFetch(route, options, method, config, body) {
     this.config = config;
     this.timeout = undefined;
     this.exceedsTimeout = false;
@@ -39,9 +38,8 @@ class ExtendedFetch {
       buildRoute(route),
       buildOptions(method, body, { ...options, signal: this.controller.signal }),
     );
-  }
 
-  then(callback) {
+  this.then = function(callback) {
     this.nativeFetch = new Promise((resolve, reject) => {
       this.timeout = setTimeout(() => {
         this.exceedsTimeout = true;
@@ -63,23 +61,23 @@ class ExtendedFetch {
       });
     });
     return this;
-  }
+  };
 
-  catch(callback) {
+  this.catch = function(callback) {
     this.nativeFetch = this.nativeFetch.catch(error => {
       if (error.name !== 'AbortError') {
         return callback(error);
       }
     });
     return this;
-  }
+  };
 
-  finally(callback) {
+  this.finally = function(callback) {
     this.nativeFetch = this.nativeFetch.finally(callback);
     return this;
-  }
+  };
 
-  abort() {
+  this.abort = function() {
     clearTimeout(this.timeout);
     this.controller.abort();
   }

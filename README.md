@@ -50,7 +50,9 @@ try {
   }, {
     cache: 'no-cache'
   }).then(response => {
-    const data = response.json();
+    response.json().then(json => {
+      const data = json;
+    })
   })
   // catch block will also return any non 200 response errors as well as timeout errors
 } catch (error) {
