@@ -1,7 +1,7 @@
 # fetchz
 
 [![Build Status](https://travis-ci.org/patriotcodes/fetchz.svg?branch=master)](https://travis-ci.org/patriotcodes/fetchz) 
-[![Coverage Status](https://coveralls.io/repos/github/patriotcodes/fetchz/badge.svg?branch=master)](https://coveralls.io/github/patriotcodes/fetchz?branch=master)
+[![Coverage Status](https://coveralls.io/repos/github/PatriotCodes/fetchz/badge.svg?branch=master)](https://coveralls.io/github/PatriotCodes/fetchz?branch=master)
 
 A lightweight wrapper over fetch api to make fetch calls easier without boilerplate code! 
 Abortable fetch with timeout, internal response.ok handling, configuration and utility functions for http methods.
