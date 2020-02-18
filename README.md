@@ -1,5 +1,6 @@
 # fetchz
 
+[![Version](https://img.shields.io/npm/v/fetchz)](https://img.shields.io/npm/v/fetchz)
 [![Build Status](https://travis-ci.org/patriotcodes/fetchz.svg?branch=master)](https://travis-ci.org/patriotcodes/fetchz) 
 [![Coverage Status](https://coveralls.io/repos/github/PatriotCodes/fetchz/badge.svg?branch=master)](https://coveralls.io/github/PatriotCodes/fetchz?branch=master)
 
