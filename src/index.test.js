@@ -49,6 +49,40 @@ describe('lib tests', () => {
     expect(fetch.mock.calls[0][0]).toEqual('http://test.com/route');
   });
 
+  // OPTIONS BUILD
+  it('should stringify body if no content header present', async () => {
+    await fetchz.post('/route', {
+      body: {
+        foo: 'bar'
+      }
+    });
+    expect(typeof fetch.mock.calls[0][1].body).toEqual('string');
+  });
+
+  it('should not stringify body if content header not of type application/json', async () => {
+    await fetchz.post('/route', {
+      headers: {
+        'Content-Type': 'text/csv',
+      },
+      body: {
+        foo: 'bar'
+      }
+    });
+    expect(typeof fetch.mock.calls[0][1].body).toEqual('object');
+  });
+
+  it('should stringify body if content header of type application/json', async () => {
+    await fetchz.post('/route', {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: {
+        foo: 'bar'
+      }
+    });
+    expect(typeof fetch.mock.calls[0][1].body).toEqual('string');
+  });
+
   // TIMEOUT
   it('should throw error if not completed within timeout', async () => {
     fetchz.config.TIMEOUT = 50;
@@ -56,6 +90,7 @@ describe('lib tests', () => {
       () => new Promise(resolve => setTimeout(() => resolve({ body: 'ok' }), 100)),
     );
     expect(fetchz.get('route').then(x => {})).rejects.toThrow();
+    fetchz.config.TIMEOUT = 5000;
   });
 
   // UTILITY FUNCTIONS

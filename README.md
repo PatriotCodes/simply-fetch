@@ -52,11 +52,10 @@ try {
     body: {
       foo: 'bar'
     }
-  }).then(response => {
-    response.json().then(json => {
+  }).then(response => response.json())
+    .then(json => {
       const data = json;
     })
-  })
   // catch block will also return any non 200 response errors as well as timeout errors
 } catch (error) {
   console.error(error);

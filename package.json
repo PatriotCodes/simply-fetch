@@ -15,6 +15,7 @@
     "test": "jest --verbose"
   },
   "jest": {
+    "automock": false,
     "setupFiles": [
       "./src/setupTests.js"
     ]
