@@ -3,8 +3,9 @@
 [![Version](https://img.shields.io/npm/v/fetchz)](https://img.shields.io/npm/v/fetchz)
 [![Build Status](https://travis-ci.org/patriotcodes/fetchz.svg?branch=master)](https://travis-ci.org/patriotcodes/fetchz) 
 [![Coverage Status](https://coveralls.io/repos/github/PatriotCodes/fetchz/badge.svg?branch=master)](https://coveralls.io/github/PatriotCodes/fetchz?branch=master)
+[![Minzipped Size](https://img.shields.io/bundlephobia/minzip/fetchz)](https://img.shields.io/bundlephobia/minzip/fetchz)
 
-A lightweight wrapper over fetch api to make fetch calls easier without boilerplate code! 
+A lightweight wrapper (only **823B** gzipped!) over fetch api to make fetch calls easier without boilerplate code! 
 Abortable fetch with timeout, internal response.ok handling, configuration and utility functions for http methods.
 
 ## Features
