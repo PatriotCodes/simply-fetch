@@ -2,6 +2,18 @@ function ExtendedFetch(route, options, method, config) {
   this.config = config;
   this.timeout = undefined;
   this.exceedsTimeout = false;
+
+  const httpMethods = {
+    GET: { bodyLess: true },
+    HEAD: { bodyLess: true },
+    OPTIONS: { bodyLess: true },
+    DELETE: { bodyLess: true },
+    CONNECT: { bodyLess: true },
+    POST: { bodyLess: false },
+    PUT: { bodyLess: false },
+    PATCH: { bodyLess: false },
+  };
+
   const buildRoute = function(route) {
     return route[0] === '/'
       ? `${window.location.protocol}//${window.location.host}${route}`
@@ -17,8 +29,10 @@ function ExtendedFetch(route, options, method, config) {
         ...(config.TOKEN() && {
           Authorization: `${config.AUTH_TYPE ? `${config.AUTH_TYPE} ` : ''}${config.TOKEN()}`,
         }),
-        'Content-Type':
-          headers && headers['Content-Type'] ? headers['Content-Type'] : 'application/json',
+        ...(!httpMethods[method].bodyLess && {
+          'Content-Type':
+            headers && headers['Content-Type'] ? headers['Content-Type'] : 'application/json',
+        }),
         ...headers,
       },
       ...(body && {
